@@ -18,15 +18,15 @@
 function Person(name, age) {
   this.name = name;
   this.age = age;
-  this.stomache = [];
+  this.stomach = [];
   }
   Person.prototype.eat = function(edible){
-    if(this.stomache.length < 10){
-      this.stomache.push(edible);
+    if(this.stomach.length < 10){
+      this.stomach.push(edible);
     }
   }
   Person.prototype.poop = function(){
-    this.stomache = [];
+    this.stomach = [];
   }
   Person.prototype.toString = function(){
     return `${this.name}, ${this.age}`;
@@ -55,17 +55,26 @@ function Person(name, age) {
         + The `drive` method should return a string "I ran out of fuel at x miles!" x being `odometer`.
 */
 
-function Car(model, milesPerGallon) {
+function Car(model, mpg) {
   this.model = model;
-  this.milesPerGallon = milesPerGallon;
+  this.milesPerGallon = mpg;
   this.tank = 0;
-  this.odemeter = 0;
+  this.odometer = 0;
 }
 Car.prototype.fill = function(gallons) {
-  if(this.tank.length < 10){
-    this.tank.fill(gallons);
+  this.tank = this.tank + gallons;
   }
-}
+  Car.prototype.drive = function(dist){
+  const driveableMiles = this.tank * this.milesPerGallon;
+  if(dist <= driveableMiles){
+    this.odometer = this.odometer + dist;
+    this.tank = this.tank - (dist / this.milesPerGallon);
+  }else{
+    this.odometer = this.odometer + driveableMiles;
+    this.tank = 0;
+    return `I ran out of fuel at ${this.odometer} miles`;
+    }
+  }
 /*
   TASK 3
     - Write a Baby constructor subclassing Person.
@@ -75,21 +84,20 @@ Car.prototype.fill = function(gallons) {
 */
 
 function Baby(name, age, favoriteToy) {
-  this.name = name;
-  this.age = age;
+  Person.call(this, name, age);
   this.favoriteToy = favoriteToy;
 }
-Person.prototype.baby =function(play){
-  this.favoriteToy.play('Playing with x');
+Baby.prototype = Object.create(Person.prototype);
+Baby.prototype.play = function() {
+  return `Playing with ${this.favoriteToy}`;
 }
-
 /* 
   TASK 4
   In your own words explain the four principles for the "this" keyword below:
-  1. 
-  2. 
-  3. 
-  4. 
+  1. Window Binding - when none of the other rules apply, this will return the window or global object in node or undefined in strict mode.
+  2. Implicit Binding - when the function is invoked look to the left of dot that's what this refers to.
+  3. Explicit Binding - .call, .apply, or .bind.
+  4. New Binding - When a function is created as a constructor this points to the newly created object.
 */
 
 ///////// END OF CHALLENGE /////////
